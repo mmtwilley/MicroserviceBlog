@@ -1,30 +1,34 @@
-import { useState,useEffect } from "react";
-import axios from "axios";
+import { Comment } from "./types/types";
+
+
 
 interface CommentListProps{
-    postId:string; 
+    commentList:Comment; 
 }
-type commentType = Array<{id:string,content:string}>;
 
 // Fix the type of code for comments
 
 
-const CommentList:React.FC<CommentListProps> = ({postId}) => {
-    const[comments,setComments] = useState<commentType>([]);
+const CommentList:React.FC<CommentListProps> = ({commentList}) => {
 
-    const fetchData = async () => {
-        const res = await axios.get(`http://localhost:4001/posts/${postId}/comments`);
+    const renderedComments = commentList.map(comment => {
+        let content;
 
-        setComments(res.data);
-    };
-
-    useEffect(() =>{
-        fetchData();
-    },[])
-
-
-    const renderedComments = comments.map(comments => {
-        return<li key={comments.id}>{comments.content}</li>
+        switch(comment.status){
+            case 'approved':
+                content = comment.content;
+                break;
+            case 'pending':
+                content = 'This content is awaiting moderation.';
+                break;
+            case 'rejected':
+                content =  content = 'This content was rejected.';
+                break;
+            default:
+                break;
+        }
+    
+        return<li key={comment.id}>{content}</li>
     })
 
     return(
