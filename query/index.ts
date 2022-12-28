@@ -1,7 +1,22 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
-import {Comment, Post} from '../types/types'
+
+type Comment = {
+    id:string;
+    content:string;
+    status: string;
+    postId?:string;
+};
+
+type Post = {
+    [key:string]:{  
+        id: string;
+        title:string;
+        comments:Comment[];
+    }
+};
+
 
 const port = 4002;
 const app = express();
@@ -55,7 +70,7 @@ app.listen(port, async () => {
     console.log(`Listening on port ${port}.`)
 
     try {
-        const res = await axios.get("http://localhost:4005/events");
+        const res = await axios.get("http://event-bus-srv:4005/events");
      
         for (let event of res.data) {
           console.log("Processing event:", event.type);

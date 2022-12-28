@@ -2,7 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import { randomBytes } from 'crypto';
 import axios from 'axios';
-import {Comment} from '../types/types'
+
+type Comment = {
+    id:string;
+    content:string;
+    status: string;
+    postId?:string;
+};
+
 
 const port = 4001;
 const app = express();
@@ -33,7 +40,7 @@ app.post ('/posts/:id/comments', async (req,res) =>{
     comments.push({id:commentId,content,status:"string"});
     commentsByPostId[req.params.id] = comments;
 
-    await axios.post('http://localhost:4005/events',{
+    await axios.post('http://event-bus-srv:4005/events',{
         type: 'CommentCreated',
         data:{
             id:commentId,
@@ -60,7 +67,7 @@ app.post('/events', async(req,res) => {
         //https://bobbyhadz.com/blog/typescript-left-hand-side-of-assignment-not-optional
         comment!.status = status;
 
-        await axios.post('http://localhost:4005/events', {
+        await axios.post('http://event-bus-srv:4005/events', {
             type: 'CommentUpdated',
             data:{
                 id,
