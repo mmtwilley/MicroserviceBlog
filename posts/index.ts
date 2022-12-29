@@ -11,12 +11,8 @@ app.use(cors());
 
 const posts: {[id:string]:{id:string,title:string}} = {};
 
-app.get('/posts',(req,res) =>{
-    res.send(posts);
-});
 
-
-app.post('/posts',async (req,res) =>{
+app.post('/posts/create',async (req,res) =>{
     const id = randomBytes(4).toString('hex');
     const {title} = req.body; 
 
@@ -44,5 +40,5 @@ app.post('/events',(req,res) => {
 
 app.listen(port, ()=>{
     console.log(`Listening on port ${port}.`);
-    console.log("With V5")
+    console.log("With V101")
 })
